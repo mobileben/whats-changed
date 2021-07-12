@@ -1,11 +1,40 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: "What's Changed"
+description: "Get what's changed in a pull request or push"
+author: 'Benjamin Lee'
 inputs:
-  milliseconds: # change this
+  debug:
+    description: 'Debug action (show additional output)'
+    required: false
+  pretty:
+    description: 'Pretty print JSON'
+    required: false
+  token:
+    description: Github Token
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    default: ${{ github.token }}
+outputs:
+  json:
+    description: JSON for everything
+  all:
+    description: Array of all files
+  all-count:
+    description: Count of all files
+  added:
+    description: Array of addeded files
+  added-count:
+    description: Count of files that have been added
+  modified:
+    description: Array of modified files
+  modified-count:
+    description: Count of files that have been modified
+  removed:
+    description: Array of removed files
+  removed-count:
+    description: Count of files that have been removed
+  renamed:
+    description: Array of renamed files
+  renamed-count:
+    description: Count of files that have been renamed
 runs:
   using: 'node12'
   main: 'dist/index.js'
