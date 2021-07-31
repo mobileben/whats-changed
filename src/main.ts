@@ -34,7 +34,7 @@ async function run(): Promise<void> {
     let path: string | null = null
     const inPath = core.getInput('path')
     if (inPath) {
-      path = inPath as string
+      path = inPath
     }
 
     const client = github.getOctokit(core.getInput('token', {required: true}))
