@@ -1,9 +1,9 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import { mkdirP } from "@actions/io"
-import { writeFile} from "fs"
-import { dirname } from "path"
-import { promisfy } from "util"
+import {mkdirP} from '@actions/io'
+import {writeFile} from 'fs'
+import {dirname} from 'path'
+import {promisify} from 'util'
 
 interface OutputJson {
   all: string[]
@@ -13,7 +13,7 @@ interface OutputJson {
   renamed: string[]
 }
 
-const writeFileAsync = promisfy(writeFile)
+const writeFileAsync = promisify(writeFile)
 
 // debug value to determine if we need to emit logging
 let debug = false
