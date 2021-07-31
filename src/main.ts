@@ -79,7 +79,7 @@ async function run(): Promise<void> {
             for (const file of response.data.files) {
               const filename = file.filename
 
-              logDebug(`${filename} $(file.status}`)
+              logDebug(`${filename} ${file.status}`)
               all.push(filename)
               switch (file.status) {
                 case 'added':
