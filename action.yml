@@ -5,6 +5,9 @@ inputs:
   debug:
     description: 'Debug action (show additional output)'
     required: false
+  path:
+    description: 'Path of file for JSON'
+    required: false
   pretty:
     description: 'Pretty print JSON'
     required: false

@@ -1,5 +1,9 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import { mkdirP } from "@actions/io"
+import { writeFile} from "fs"
+import { dirname } from "path"
+import { promisfy } from "util"
 
 interface OutputJson {
   all: string[]
@@ -8,6 +12,8 @@ interface OutputJson {
   removed: string[]
   renamed: string[]
 }
+
+const writeFileAsync = promisfy(writeFile)
 
 // debug value to determine if we need to emit logging
 let debug = false
@@ -23,6 +29,12 @@ async function run(): Promise<void> {
     const inPretty = core.getInput('pretty')
     if (inPretty) {
       pretty = JSON.parse(inPretty) as boolean
+    }
+
+    let path: string | null = null
+    const inPath = core.getInput('path')
+    if (inPath) {
+      path = inPath as string
     }
 
     const client = github.getOctokit(core.getInput('token', {required: true}))
@@ -102,13 +114,18 @@ async function run(): Promise<void> {
       renamed
     }
 
-    populateOutput(json, pretty)
+    const out = populateOutput(json, pretty)
+    if (path) {
+      const targetDir = dirname(path)
+      await mkdirP(targetDir)
+      await writeFileAsync(path, out)
+    }
   } catch (error) {
     core.setFailed(error.message)
   }
 }
 
-function populateOutput(json: OutputJson, pretty: boolean): void {
+function populateOutput(json: OutputJson, pretty: boolean): string {
   const outJson = pretty ? JSON.stringify(json, null, 4) : JSON.stringify(json)
   core.setOutput('json', outJson)
   core.setOutput('all', JSON.stringify(json.all))
@@ -121,6 +138,7 @@ function populateOutput(json: OutputJson, pretty: boolean): void {
   core.setOutput('modified-count', json.modified.length)
   core.setOutput('removed-count', json.removed.length)
   core.setOutput('renamed-count', json.renamed.length)
+  return outJson
 }
 
 function logDebug(msg: string): void {
